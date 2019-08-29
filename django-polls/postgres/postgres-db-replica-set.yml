@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: postgres-rs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      volumes:
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: postgres-pv-claim
+      containers:
+      - image: postgres:11.4
+        name: db
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: polls-secret
+              key: password
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: polls-secret
+              key: username
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: polls-secret
+              key: dbname
+        ports:
+        - containerPort: 5432
+          name: postgres
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data

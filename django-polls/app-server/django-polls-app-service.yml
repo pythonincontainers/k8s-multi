@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-polls-service
+spec:
+  selector:
+    app: django-polls-app
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+    name: django-port

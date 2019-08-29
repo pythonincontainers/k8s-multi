@@ -1,0 +1,3 @@
+FROM pythonincontainers/django-polls:nginx
+COPY uwsgi-http.ini /code/uwsgi-nginx.ini
+RUN python manage.py collectstatic
